@@ -1,0 +1,22 @@
+env:
+  base:
+    DEBUG: true
+    DJANGO_SETTINGS_MODULE: lbdemo.settings
+resources:
+  database:
+    type: postgres
+  cache:
+    type: redis
+phases:
+  setup:
+    - pip3 install -r requirements.txt
+  tenant:
+    - python3 manage.py migrate --noinput
+    - python3 manage.py collectstatic --noinput
+routes:
+  site:
+    route: /
+    type: wsgi
+    options:
+      path: lbdemo/wsgi.py
+      var: application
